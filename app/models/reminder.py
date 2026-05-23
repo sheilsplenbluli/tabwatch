@@ -26,6 +26,15 @@ class Reminder:
         now = now or datetime.utcnow()
         return not self.triggered and self.remind_at <= now
 
+    def snooze(self, minutes: int) -> None:
+        """Reschedule the reminder by the given number of minutes and reset triggered state."""
+        if minutes <= 0:
+            raise ValueError("Snooze duration must be a positive number of minutes.")
+        from datetime import timedelta
+        self.remind_at = datetime.utcnow() + timedelta(minutes=minutes)
+        self.triggered = False
+        self.triggered_at = None
+
     def to_dict(self) -> dict:
         return {
             "id": self.id,
