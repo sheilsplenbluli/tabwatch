@@ -47,3 +47,15 @@ class DomainVisit:
             end_time=datetime.fromisoformat(data["end_time"]) if data.get("end_time") else None,
             duration_seconds=data.get("duration_seconds", 0),
         )
+
+    def effective_duration(self) -> int:
+        """Return the current duration in seconds.
+
+        For closed visits, returns the stored duration_seconds. For active
+        visits, calculates the elapsed time from start_time to now so callers
+        always get an up-to-date value without needing to close the visit first.
+        """
+        if not self.is_active:
+            return self.duration_seconds
+        delta = datetime.utcnow() - self.start_time
+        return max(0, int(delta.total_seconds()))
