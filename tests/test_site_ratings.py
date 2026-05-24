@@ -54,6 +54,13 @@ def test_list_ratings_for_user(client):
     assert len(resp.get_json()) == 2
 
 
+def test_list_ratings_empty_user(client):
+    """A user with no ratings should get an empty list, not a 404."""
+    resp = client.get("/ratings/user_with_no_ratings")
+    assert resp.status_code == 200
+    assert resp.get_json() == []
+
+
 def test_get_for_domain_found(client):
     client.post("/ratings/user1", json={"domain": "example.com", "rating": 3})
     resp = client.get("/ratings/user1/domain/example.com")
