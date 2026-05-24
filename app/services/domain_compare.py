@@ -47,7 +47,15 @@ def compare_domains(
     """Return a side-by-side comparison of two domains for *user_id*.
 
     Only closed visits are counted.  Optionally filter by *start* / *end*.
+
+    Raises:
+        ValueError: If *domain_a* and *domain_b* are the same domain.
     """
+    if domain_a == domain_b:
+        raise ValueError(
+            f"domain_a and domain_b must be different domains, got {domain_a!r} for both"
+        )
+
     all_visits = get_visits_for_user(user_id)
 
     def _filter(domain: str):
